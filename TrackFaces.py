@@ -36,6 +36,27 @@ class CharacterTracker:
         self.similarity_thresh = similarity_thresh
         self.yaw_thresh = yaw_thresh
 
+    def reset(self) :
+        self.track_to_char_map.clear()
+        self.track_confirmed.clear()
+        
+        tracker_args = SimpleNamespace(
+            track_high_thresh = 0.5,
+            track_low_thresh = 0.1,
+            new_track_thresh = 0.6,
+            track_buffer = 30,
+            match_thresh = 0.5,
+            gmc_method = 'sparseOptFlow',
+            proximity_thresh = 0.5,
+            appearance_thresh = 0.25,
+            with_reid = False,
+            model = 'yolov8n-cls.pt',
+            device = 'cpu',
+            fuse_score = True,
+            frame_rate = 30
+        )
+        self.bot_tracker = BOTSORT(args=tracker_args)
+
     def yaw(self, kps):
         left_eye, right_eye, nose = kps[0], kps[1], kps[2]
         dist_l = abs(nose[0] - left_eye[0])
